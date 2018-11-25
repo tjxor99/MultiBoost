@@ -82,7 +82,7 @@ namespace MultiBoost {
                              1, "<K>");
 
         args.declareArgument("banditalgo", 
-                             "The bandit algorithm (UCBK, UCBKRandomized, EXP3, Wish )\n"
+                             "The bandit algorithm (UCBK, UCBKRandomized, EXP3, WISH )\n"
                              "Default is UCBK\n",
                              1, "<algoname>");
 
