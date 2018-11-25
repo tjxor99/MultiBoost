@@ -57,6 +57,7 @@
 
 #include "WeakLearners/Haar/HaarFeatures.h"
 
+
 namespace MultiBoost {
     REGISTER_LEARNER(AdaLineLearner)                
         REGISTER_LEARNER(BanditSingleSparseStump)
@@ -81,11 +82,14 @@ namespace MultiBoost {
         REGISTER_LEARNER(TreeLearnerUCT)
         REGISTER_LEARNER_NAME(UCBVHaarSingleStump, UCBVHaarSingleStumpLearner)
 
+        // REGISTER_LEARNER(WishSingleStump)
+
         // Register the haar features
         REGISTER_HAAR_FEATURE(2h, HaarFeature_2H);
     REGISTER_HAAR_FEATURE(2v, HaarFeature_2V);
     REGISTER_HAAR_FEATURE(3h, HaarFeature_3H);
     REGISTER_HAAR_FEATURE(3v, HaarFeature_3V);
     REGISTER_HAAR_FEATURE(4q, HaarFeature_4SQ);
+
 
 }

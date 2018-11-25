@@ -54,6 +54,8 @@
 #include "Bandits/Exp3G2.h"
 #include "Bandits/Exp3P.h"
 
+#include "Bandits/Wish.h"
+
 namespace MultiBoost {
 
     //REGISTER_LEARNER_NAME(SingleStump, BanditSingleStumpLearner)
@@ -80,7 +82,7 @@ namespace MultiBoost {
                              1, "<K>");
 
         args.declareArgument("banditalgo", 
-                             "The bandit algorithm (UCBK, UCBKRandomized, EXP3 )\n"
+                             "The bandit algorithm (UCBK, UCBKRandomized, EXP3, Wish )\n"
                              "Default is UCBK\n",
                              1, "<algoname>");
 
@@ -147,6 +149,12 @@ namespace MultiBoost {
             _banditAlgoName = BA_EXP3G2;
         else if ( banditAlgoName.compare( "EXP3P" ) == 0 )
             _banditAlgoName = BA_EXP3P;
+// 
+// 
+        else if ( banditAlgoName.compare( "WISH" ) == 0 )
+            _banditAlgoName = BA_WISH;
+// 
+// 
         else {
             cerr << "Unknown bandit algo (BanditSingleStumpLearner)" << endl;
             _banditAlgoName = BA_UCBK;
@@ -179,6 +187,11 @@ namespace MultiBoost {
             case BA_EXP3P:
                 _banditAlgo = new Exp3P();
                 break;
+// 
+            case BA_WISH:
+                _banditAlgo = new Wish();
+                break;
+// 
             default:
                 cerr << "There is no bandit algorithm to be given!" << endl;
                 exit( -1 );
