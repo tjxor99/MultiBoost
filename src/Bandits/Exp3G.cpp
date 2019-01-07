@@ -164,7 +164,6 @@ namespace MultiBoost {
             _tmpW[i] = _w[i] - max;
             expSum += exp( _tmpW[i] );
         }
-        
 
 
         for( int i=0; i<_numOfArms; i++ ) 
