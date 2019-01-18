@@ -122,9 +122,7 @@ Notice that even if alpha << 0, if outer_time == 1 i^alpha == 1 so we will still
         _r_av[ armNum ] = ((_T[ armNum ] - 1)*_r_av[ armNum ] + reward) / _T[ armNum ]; // Simplified version of above.
 
         // Explore
-        // if ( _inner_time <= 0 ) { // What we intended for alpha = -100 (Don't explore)
-        // if ( _inner_time <= _numOfArms * pow(_out_time, _alpha) ) { // Using i^alpha
-        if ( _inner_time <= (int)_numOfArms * _Cparam * pow(_out_time, _alpha) ) { // Using Cparam
+        if ( _inner_time <= (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
             int next_arm;
 
             if (armNum == (_numOfArms - 1)) { 
@@ -141,8 +139,7 @@ Notice that even if alpha << 0, if outer_time == 1 i^alpha == 1 so we will still
         }
 
         else {
-            // if (0) // No Explore
-            if (_inner_time >= (int)(_numOfArms * _Cparam * pow(_out_time, _alpha) + _numOfArms * pow((double)2.0, _out_time)))
+            if (_inner_time >= (int)(_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) + _numOfArms * pow((double)2.0, _out_time)))
             {
                 fill( _w.begin(), _w.end(), -10.0 );
                 _w[0] = 1;
@@ -153,7 +150,7 @@ Notice that even if alpha << 0, if outer_time == 1 i^alpha == 1 so we will still
             else {
                 // Exploit in next turn.
                 for (int i = 0; i <_numOfArms; i++) {
-                    _w[i] = _eta * pow(_time - 1, 0.5) * _r_av[i];
+                    _w[i] = _eta * sqrt(_time - 1) * _r_av[i];
                 }                
             }
         }
