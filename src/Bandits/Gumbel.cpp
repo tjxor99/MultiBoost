@@ -113,6 +113,7 @@ namespace MultiBoost {
 
         // Update average reward of arm pulled.
         _r_av[ armNum ] = ((_T[ armNum ] - 1)*_r_av[ armNum ] + reward) / _T[ armNum ];
+        updateithValue( armNum ); // Verified that updateithValue just has to be called once!
 
     }
 

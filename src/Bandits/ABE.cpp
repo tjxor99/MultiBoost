@@ -49,8 +49,8 @@ namespace MultiBoost {
         _eta = 0.4;
         _horizon = 100.0;
 
-        _Cparam = 0.1;
-        _alpha = 0.7; // The exponent of outer time for which exploration occurs (i^\alpha)
+        _Cparam = 2.0;
+        _alpha = 0.3; // The exponent of outer time for which exploration occurs (i^\alpha)
     }
 
 
@@ -124,7 +124,7 @@ Notice that even if alpha << 0, if outer_time == 1 i^alpha == 1 so we will still
         // Explore
         // if ( _inner_time <= 0 ) { // What we intended for alpha = -100 (Don't explore)
         // if ( _inner_time <= _numOfArms * pow(_out_time, _alpha) ) { // Using i^alpha
-        if ( _inner_time <= (int)_numOfArms * _Cparam * pow(_out_time, _alpha) ) { // Using Cparam
+        if ( _inner_time <= (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
             int next_arm;
 
             if (armNum == (_numOfArms - 1)) { 
@@ -142,7 +142,7 @@ Notice that even if alpha << 0, if outer_time == 1 i^alpha == 1 so we will still
 
         else {
             // if (0) // No Explore
-            if (_inner_time >= (int)(_numOfArms * _Cparam * pow(_out_time, _alpha) + _numOfArms * pow((double)2.0, _out_time)))
+            if (_inner_time >= (int)(_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) + _numOfArms * pow((double)2.0, _out_time)))
             {
                 fill( _w.begin(), _w.end(), -10.0 );
                 _w[0] = 1;
