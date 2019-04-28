@@ -97,8 +97,6 @@ namespace MultiBoost {
 
     void FTL::receiveReward( int armNum, AlphaReal reward )
     {
-        int flag; // testing
-
         _T[ armNum ]++;
         // calculate the feedback value
 
@@ -111,8 +109,6 @@ namespace MultiBoost {
 
         // Explore
         if ( _inner_time < (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
-            flag = 0;
-
             // int next_arm;
 
             if (armNum == (_numOfArms - 1)) { 
@@ -128,7 +124,6 @@ namespace MultiBoost {
         else {
             if (_inner_time >= (int)(_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) + _numOfArms * pow((double)2.0, _out_time)))
             {
-                flag = 0;
                 _next_arm = 0;
 
                 // Explore the next turn.
@@ -137,8 +132,6 @@ namespace MultiBoost {
             }
 
             else {
-                flag = 1;
-
                 // Follow the leader
                 _next_arm = 0;
                 double max_val = _r_av[0];
@@ -153,12 +146,10 @@ namespace MultiBoost {
         }
 
         // std::cout << "Inner time: " << _inner_time << "\n";
-        // std::cout << "Flag is " << flag << '\n';
-
-        std::cout << "Reward Vector \n";
-        for (int i = 0; i < _numOfArms; i++) {
-            std::cout << _r_av[i] << '\n';
-        }
+        // std::cout << "Reward Vector \n";
+        // for (int i = 0; i < _numOfArms; i++) {
+        //     std::cout << _r_av[i] << '\n';
+        // }
     }
 
 

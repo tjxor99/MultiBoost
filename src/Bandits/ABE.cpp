@@ -49,7 +49,7 @@ namespace MultiBoost {
         _eta = 0.4;
         _horizon = 100.0;
 
-        _Cparam = 2.0;
+        _Cparam = 1.0;
         _alpha = 0.3; // The exponent of outer time for which exploration occurs (i^\alpha)
     }
 
@@ -89,28 +89,35 @@ namespace MultiBoost {
     }
 //----------------------------------------------------------------
 //----------------------------------------------------------------
+    void ABE::updateithValue( int arm )
+    {
+        //double sum = 0.0;
+        AlphaReal max = -numeric_limits<AlphaReal>::max();
+        for( int i=0; i<_numOfArms; i++ ) 
+        {
+            //sum += _w[i];
+            if ( max < _w[i] ) max = _w[i];
+        }
+        //double mean = sum / ( double ) _numOfArms;
+        AlphaReal expSum = 0.0;
+        
+        for( int i=0; i<_numOfArms; i++ ) 
+        {
+            _tmpW[i] = _w[i] - max;
+            expSum += exp( _tmpW[i] );
+        }
+
+
+        for( int i=0; i<_numOfArms; i++ ) 
+        {
+            //_p[i] = ( 1 - _gamma ) * exp( _w[i] / sum ) + ( _gamma / (double)getIterNum() );
+            _p[i] = exp( _tmpW[i] ) / expSum ;
+        }
+    }
 
 
     void ABE::receiveReward( int armNum, AlphaReal reward )
     {
-/*
-Notice that even if alpha << 0, if outer_time == 1 i^alpha == 1 so we will still have exploration in the first K steps.
-*/
-
-// Check Start
-// To check if updateithValue can only be called once instead of running a for loop.
-// Verified that updateithValue only has to be called once.
-// Thus, instead of running a for loop, I will instead just use std::fill which is faster.
-        // std::cout << "Outer Time" << std::endl;
-        // std::cout << _out_time << std::endl;
-        // for (int i = 0; i < _numOfArms; i++) {
-        //     std::cout << "Weight ";
-        //     std::cout << i << std::endl;
-        //     std::cout << _w[i] << std::endl;
-        //     std::cout << _p[i] << std::endl;
-        // }
-// Check End
-
         _T[ armNum ]++;
         // calculate the feedback value
 
@@ -122,7 +129,7 @@ Notice that even if alpha << 0, if outer_time == 1 i^alpha == 1 so we will still
         _r_av[ armNum ] = ((_T[ armNum ] - 1)*_r_av[ armNum ] + reward) / _T[ armNum ]; // Simplified version of above.
 
         // Explore
-        if ( _inner_time <= (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
+        if ( _inner_time < (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
             int next_arm;
 
             if (armNum == (_numOfArms - 1)) { 
@@ -157,6 +164,11 @@ Notice that even if alpha << 0, if outer_time == 1 i^alpha == 1 so we will still
 
 
         updateithValue( armNum ); // Verified that updateithValue just has to be called once!
+
+        std::cout << "Reward Vector \n";
+        for (int i = 0; i < _numOfArms; i++) {
+            std::cout << _r_av[i] << '\n';
+        }
 
     }
 
