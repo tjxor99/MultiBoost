@@ -102,6 +102,32 @@ namespace MultiBoost {
         return maxarg;
     }
 
+    // void Gumbel::updateithValue( int arm )
+    // {
+    //     //double sum = 0.0;
+    //     AlphaReal max = -numeric_limits<AlphaReal>::max();
+    //     for( int i=0; i<_numOfArms; i++ ) 
+    //     {
+    //         //sum += _w[i];
+    //         if ( max < _w[i] ) max = _w[i];
+    //     }
+    //     //double mean = sum / ( double ) _numOfArms;
+    //     AlphaReal expSum = 0.0;
+        
+    //     for( int i=0; i<_numOfArms; i++ ) 
+    //     {
+    //         _tmpW[i] = _w[i] - max;
+    //         expSum += exp( _tmpW[i] );
+    //     }
+
+
+    //     for( int i=0; i<_numOfArms; i++ ) 
+    //     {
+    //         //_p[i] = ( 1 - _gamma ) * exp( _w[i] / sum ) + ( _gamma / (double)getIterNum() );
+    //         _p[i] = exp( _tmpW[i] ) / expSum ;
+    //     }
+    // }
+
 //----------------------------------------------------------------
 //----------------------------------------------------------------
 
@@ -113,7 +139,7 @@ namespace MultiBoost {
 
         // Update average reward of arm pulled.
         _r_av[ armNum ] = ((_T[ armNum ] - 1)*_r_av[ armNum ] + reward) / _T[ armNum ];
-        updateithValue( armNum ); // Verified that updateithValue just has to be called once!
+        // Gumbel::updateithValue( armNum ); // Verified that updateithValue just has to be called once!
 
     }
 
