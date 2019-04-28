@@ -66,9 +66,10 @@ namespace MultiBoost {
         BA_EXP3G, // EXP3G
         BA_EXP3G2, // EXP3G
         BA_EXP3P, // EXP3
-        BA_WISH, // Wish
+        // BA_WISH, // Wish
         BA_ABE, // ABE
-        BA_Gumbel // Gumbel
+        BA_Gumbel, // Gumbel
+        BA_FTL // Gumbel
     };
         
         
