@@ -49,8 +49,8 @@ namespace MultiBoost {
         _eta = 0.4;
         _horizon = 100.0;
 
-        _Cparam = 1.0;
-        _alpha = 0.3; // The exponent of outer time for which exploration occurs (i^\alpha)
+        _Cparam = 0.2;
+        _alpha = 0.7; // The exponent of outer time for which exploration occurs (i^\alpha)
     }
 
 
@@ -148,10 +148,19 @@ namespace MultiBoost {
         else {
             if (_inner_time >= (int)(_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) + _numOfArms * pow((double)2.0, _out_time)))
             {
-                fill( _w.begin(), _w.end(), -10.0 );
-                _w[0] = 1;
                 _inner_time = 0;
                 _out_time++;
+
+                // Determine whether the next is pure exploration phase or BE phase
+                if ( _inner_time < (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
+                    fill( _w.begin(), _w.end(), -10.0 );
+                    _w[0] = 1;
+                }
+                else { // BE
+                    for (int i = 0; i <_numOfArms; i++) {
+                        _w[i] = _eta * sqrt(_time - 1) * _r_av[i];
+                    }                
+                }
             }
 
             else {
@@ -165,10 +174,10 @@ namespace MultiBoost {
 
         updateithValue( armNum ); // Verified that updateithValue just has to be called once!
 
-        std::cout << "Reward Vector \n";
-        for (int i = 0; i < _numOfArms; i++) {
-            std::cout << _r_av[i] << '\n';
-        }
+        // std::cout << "Reward Vector \n";
+        // for (int i = 0; i < _numOfArms; i++) {
+        //     std::cout << _r_av[i] << '\n';
+        // }
 
     }
 

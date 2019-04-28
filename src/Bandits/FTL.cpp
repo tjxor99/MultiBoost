@@ -48,7 +48,7 @@ namespace MultiBoost {
 
         _Cparam = 1;
         // _Cparam = 0.1;
-        _alpha = 0.7; // The exponent of outer time for which exploration occurs (i^\alpha)
+        _alpha = 0.5; // The exponent of outer time for which exploration occurs (i^\alpha)
     }
 
 
@@ -90,7 +90,6 @@ namespace MultiBoost {
 
     int FTL::getNextAction()
     {
-        std::cout << "Arm selected in getNextAction() " << _next_arm << "\n";
         return _next_arm;
     }
 
@@ -99,6 +98,9 @@ namespace MultiBoost {
     {
         _T[ armNum ]++;
         // calculate the feedback value
+
+        // int flag;
+
 
         incIter();
         _time++;
@@ -110,6 +112,7 @@ namespace MultiBoost {
         // Explore
         if ( _inner_time < (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
             // int next_arm;
+            // flag = 0;
 
             if (armNum == (_numOfArms - 1)) { 
                 // Inner loop iterated over K arms. Go back to arm 0.
@@ -124,14 +127,31 @@ namespace MultiBoost {
         else {
             if (_inner_time >= (int)(_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) + _numOfArms * pow((double)2.0, _out_time)))
             {
-                _next_arm = 0;
-
-                // Explore the next turn.
+                // Reset inner time and increment outer time.
                 _inner_time = 0;
                 _out_time++;
+
+                // Determine whether the next is pure exploration phase or FTL phase
+		        if ( _inner_time < (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
+		        	// flag = 0;
+	                _next_arm = 0;
+		        }
+		        else { // FTL
+		        	// flag = 1;
+	                _next_arm = 0;
+	                double max_val = _r_av[0];
+	                for (int i = 1; i < _numOfArms; i++) {
+	                    if (max_val < _r_av[i]) {
+	                        max_val = _r_av[i];
+	                        _next_arm = i;
+	                    }
+	                }	        	
+		        }
+
             }
 
             else {
+            	// flag = 1;
                 // Follow the leader
                 _next_arm = 0;
                 double max_val = _r_av[0];
@@ -145,11 +165,6 @@ namespace MultiBoost {
             }
         }
 
-        // std::cout << "Inner time: " << _inner_time << "\n";
-        // std::cout << "Reward Vector \n";
-        // for (int i = 0; i < _numOfArms; i++) {
-        //     std::cout << _r_av[i] << '\n';
-        // }
     }
 
 
