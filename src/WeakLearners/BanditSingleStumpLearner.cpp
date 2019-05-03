@@ -57,6 +57,7 @@
 // #include "Bandits/Wish.h"
 #include "Bandits/ABE.h"
 #include "Bandits/Gumbel.h"
+#include "Bandits/AFTL.h"
 #include "Bandits/FTL.h"
 
 namespace MultiBoost {
@@ -85,7 +86,7 @@ namespace MultiBoost {
                              1, "<K>");
 
         args.declareArgument("banditalgo", 
-                             "The bandit algorithm (UCBK, UCBKRandomized, EXP3, ABE, Gumbel, FTL )\n"
+                             "The bandit algorithm (UCBK, UCBKRandomized, EXP3, ABE, Gumbel, AFTL, FTL )\n"
                              "Default is UCBK\n",
                              1, "<algoname>");
 
@@ -160,13 +161,16 @@ namespace MultiBoost {
             _banditAlgoName = BA_ABE;
         else if ( banditAlgoName.compare( "Gumbel" ) == 0 ) // Gumbel
             _banditAlgoName = BA_Gumbel;
+        else if ( banditAlgoName.compare( "AFTL") == 0 )
+            _banditAlgoName = BA_AFTL;
         else if ( banditAlgoName.compare( "FTL") == 0 )
             _banditAlgoName = BA_FTL;
 // 
 // 
         else {
             cerr << "Unknown bandit algo (BanditSingleStumpLearner)" << endl;
-            _banditAlgoName = BA_UCBK;
+            throw "Use Valid Algorithm";
+            // _banditAlgoName = BA_UCBK;
         }
 
         if ( _banditAlgo == NULL ) {
@@ -205,6 +209,9 @@ namespace MultiBoost {
                 break;
             case BA_Gumbel:
                 _banditAlgo = new Gumbel();
+                break;
+            case BA_AFTL:
+                _banditAlgo = new AFTL();
                 break;
             case BA_FTL:
                 _banditAlgo = new FTL();

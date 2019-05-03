@@ -58,12 +58,6 @@ namespace MultiBoost {
         double _horizon; //horizon
         double _time; //time in WISH
 
-        double _out_time; // i counter in ABE. Set as double to put into pow
-        int _inner_time;
-
-        double _alpha; // exploration exponent
-        double _Cparam;
-
         vector< AlphaReal > _r_av; //average reward in WISH
 
         int _next_arm;

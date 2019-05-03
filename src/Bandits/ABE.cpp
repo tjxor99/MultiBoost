@@ -49,8 +49,8 @@ namespace MultiBoost {
         _eta = 0.4;
         _horizon = 100.0;
 
-        _Cparam = 0.2;
-        _alpha = 0.7; // The exponent of outer time for which exploration occurs (i^\alpha)
+        _Cparam = 1.;
+        _alpha = 0.5; // The exponent of outer time for which exploration occurs (i^\alpha)
     }
 
 
