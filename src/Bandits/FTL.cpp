@@ -61,10 +61,14 @@ namespace MultiBoost {
         _next_arm = -1;
 
 
-        fill( _r_av.begin(), _r_av.end(), 0.0 );
+        // Init to 1
+        fill( _r_av.begin(), _r_av.end(), 1.0 );
+        fill( _T.begin(), _T.end(), 1.0 );
+
+        // fill( _r_av.begin(), _r_av.end(), 0.0 );
+        // fill( _T.begin(), _T.end(), 0 );
         
         //one pull for all arm
-        fill( _T.begin(), _T.end(), 0 );
         
         setInitializedFlagToTrue();
     }
