@@ -91,7 +91,7 @@ namespace MultiBoost {
         AlphaReal U;
         for (int i = 0; i < _numOfArms; i++) {
             // Draw noise Z \in \reals^d from Laplace density eta/2 exp(-eta norm(z))
-            U = std::rand() - 0.5;
+            U = std::rand() / (AlphaReal) RAND_MAX - 0.5;
 
             _Z[i] = - sgn(U) / _eta * log(1 - 2 * abs(U));
             _Xhat[i] = _r_av[i] + _Z[i];
