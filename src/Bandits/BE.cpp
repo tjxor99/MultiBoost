@@ -44,6 +44,8 @@ namespace MultiBoost {
 
     BE::BE( void ) : Exp3G()
     {
+        // _gamma = 0.1;
+        _gamma = 0.0;
         _eta = 0.4;
         _horizon = 100.0;
     }
@@ -62,15 +64,15 @@ namespace MultiBoost {
         _r_av.resize( _numOfArms ); //average reward vector in WISH
 
 
-        fill( _p.begin(), _p.end(), 0.0 );
-        fill( _w.begin(), _w.end(), -0.0 );
+        fill( _p.begin(), _p.end(), 1.0 / _numOfArms );
+        fill( _w.begin(), _w.end(), 0.0 );
 
-        // Init to 0
         fill( _r_av.begin(), _r_av.end(), 0.0 );
-        fill( _T.begin(), _T.end(), 0 );
 
-        // copy( vals.begin(), vals.end(), _X.begin() );
+        copy( vals.begin(), vals.end(), _X.begin() );
         
+        //one pull for all arm
+        fill( _T.begin(), _T.end(), 0 );
         
         setInitializedFlagToTrue();
     }
@@ -102,32 +104,6 @@ namespace MultiBoost {
         }
     }
 
-    int BE::getNextAction()
-    {
-        vector< AlphaReal > cumsum( getArmNumber()+1 );
-        int i;
-
-        cumsum[0] = 0.0;
-        for( int i=0; i < getArmNumber(); i++ )
-        {
-            cumsum[i+1] = cumsum[i] + _p[i];
-        }
-
-        for( i=0; i < getArmNumber(); i++ )
-        {
-            cumsum[i+1] /= cumsum[  getArmNumber() ];
-        }
-
-        AlphaReal r = rand() / (AlphaReal) RAND_MAX;
-
-        for( i=0; i < getArmNumber(); i++ )
-        {
-            if ( (cumsum[i] <= r) && ( r<=cumsum[i+1] )  ) break;
-        }
-
-        return i;
-    }
-
 
     void BE::receiveReward( int armNum, AlphaReal reward )
     {
@@ -138,14 +114,13 @@ namespace MultiBoost {
         _time++;
 
         // Update average reward of arm pulled.
-        _r_av[ armNum ] = ((_T[ armNum ] - 1) * _r_av[ armNum ] + reward) / _T[ armNum ]; // Simplified version of above.
-
+        _r_av[ armNum ] = ((_T[ armNum ] - 1)*_r_av[ armNum ] + reward) / _T[ armNum ]; // Simplified version of above.
         for (int i = 0; i <_numOfArms; i++) {
             _w[i] = _eta * sqrt(_time - 1) * _r_av[i];
         }                
 
-        updateithValue( armNum ); // Verified that updateithValue just has to be called once!
 
+        updateithValue( armNum ); // Verified that updateithValue just has to be called once!
     }
 
 

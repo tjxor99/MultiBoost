@@ -59,6 +59,8 @@ namespace MultiBoost {
         double _time; //time in WISH
 
         vector< AlphaReal > _r_av; //average reward in WISH
+        // _eta is the alpha in the paper
+        //Hedge _hedge;
 
     public:
         BE(void);
@@ -69,7 +71,6 @@ namespace MultiBoost {
         virtual void receiveReward( int armNum, AlphaReal reward );
         virtual void initialize( vector< AlphaReal >& vals );
     protected:
-        virtual int getNextAction();
         virtual void updateithValue( int arm ); 
     };
 

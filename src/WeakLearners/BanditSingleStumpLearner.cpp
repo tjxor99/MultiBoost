@@ -275,7 +275,6 @@ namespace MultiBoost {
         }
 
         _banditAlgo->initialize( initialValues );
-
     }
 
     // ------------------------------------------------------------------------------
