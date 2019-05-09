@@ -32,8 +32,8 @@
 
 
 
-#ifndef _ABE_H
-#define _ABE_H
+#ifndef _BE_H
+#define _BE_H
 
 #include <list>
 #include <functional>
@@ -52,32 +52,24 @@ namespace MultiBoost {
 //////////////////////////////////////////////////////////////////////////////////
 
 
-    class ABE : public Exp3G
+    class BE : public Exp3G
     {
     protected:
         double _horizon; //horizon
         double _time; //time in WISH
 
-        int _next_arm;
-        double _out_time; // i counter in ABE. Set as double to put into pow
-        int _inner_time;
-        double _alpha; // exploration exponent
-        double _Cparam;
-
         vector< AlphaReal > _r_av; //average reward in WISH
-        // _eta is the alpha in the paper
-        //Hedge _hedge;
 
     public:
-        ABE(void);
-        virtual ~ABE(void)
+        BE(void);
+        virtual ~BE(void)
         {
         }
 
         virtual void receiveReward( int armNum, AlphaReal reward );
         virtual void initialize( vector< AlphaReal >& vals );
     protected:
-        virtual void getNextAction();
+        virtual int getNextAction();
         virtual void updateithValue( int arm ); 
     };
 
