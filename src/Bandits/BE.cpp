@@ -67,12 +67,16 @@ namespace MultiBoost {
         fill( _p.begin(), _p.end(), 1.0 / _numOfArms );
         fill( _w.begin(), _w.end(), 0.0 );
 
-        fill( _r_av.begin(), _r_av.end(), 0.0 );
+        // init to 0
+        // fill( _r_av.begin(), _r_av.end(), 0.0 );
+        // fill( _T.begin(), _T.end(), 0 );
+
+        // Init to 1
+        fill( _r_av.begin(), _r_av.end(), 1.0 );
+        fill( _T.begin(), _T.end(), 1.0 );
 
         copy( vals.begin(), vals.end(), _X.begin() );
         
-        //one pull for all arm
-        fill( _T.begin(), _T.end(), 0 );
         
         setInitializedFlagToTrue();
     }
