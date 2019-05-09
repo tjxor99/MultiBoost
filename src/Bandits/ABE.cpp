@@ -49,7 +49,7 @@ namespace MultiBoost {
         _eta = 0.4;
         _horizon = 100.0;
 
-        _Cparam = 1.;
+        _Cparam = 0.;
         _alpha = 0.5; // The exponent of outer time for which exploration occurs (i^\alpha)
     }
 
@@ -67,7 +67,6 @@ namespace MultiBoost {
         _out_time = 1; // outer counter.
         _inner_time = 0; // inner counter.
         _r_av.resize( _numOfArms ); //average reward vector in WISH
-
 
 
         fill( _p.begin(), _p.end(), 0.0 );
@@ -164,7 +163,7 @@ namespace MultiBoost {
             }
 
             else {
-                // Exploit in next turn.
+                // Exploit in next turn without resetting time.
                 for (int i = 0; i <_numOfArms; i++) {
                     _w[i] = _eta * sqrt(_time - 1) * _r_av[i];
                 }                

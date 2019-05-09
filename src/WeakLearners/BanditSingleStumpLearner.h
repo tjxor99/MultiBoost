@@ -70,7 +70,8 @@ namespace MultiBoost {
         BA_ABE, // ABE
         BA_Gumbel, // Gumbel
         BA_AFTL, // AFTL
-        BA_FTL // FTL
+        BA_FTL, // FTL
+        BA_FPL // FPL
     };
         
         

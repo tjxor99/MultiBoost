@@ -30,10 +30,12 @@
  *
  */
 
+// Follow the Perturbed Leader (FPL)
 
 
-#ifndef _ABE_H
-#define _ABE_H
+
+#ifndef _FPL_H
+#define _FPL_H
 
 #include <list>
 #include <functional>
@@ -52,33 +54,31 @@ namespace MultiBoost {
 //////////////////////////////////////////////////////////////////////////////////
 
 
-    class ABE : public Exp3G
+    class FPL : public Exp3G
     {
     protected:
         double _horizon; //horizon
         double _time; //time in WISH
 
-        int _next_arm;
-        double _out_time; // i counter in ABE. Set as double to put into pow
-        int _inner_time;
-        double _alpha; // exploration exponent
-        double _Cparam;
+        AlphaReal _eta;
+        AlphaReal _gamma;
 
         vector< AlphaReal > _r_av; //average reward in WISH
-        // _eta is the alpha in the paper
-        //Hedge _hedge;
+        vector< AlphaReal > _Z; // Laplacian noise in FPL
+        vector< AlphaReal > _Xhat; // _r_av[i] + Z[i]
+
+        int _next_arm;
 
     public:
-        ABE(void);
-        virtual ~ABE(void)
+        FPL(void);
+        virtual ~FPL(void)
         {
         }
+        virtual int getNextAction();
+        virtual double sgn( double x );
 
         virtual void receiveReward( int armNum, AlphaReal reward );
         virtual void initialize( vector< AlphaReal >& vals );
-    protected:
-        virtual void getNextAction();
-        virtual void updateithValue( int arm ); 
     };
 
 
