@@ -105,6 +105,9 @@ namespace MultiBoost {
 
     void TS::initialize( vector< AlphaReal >& vals )
     {
+        _T.resize( _numOfArms );
+        _alpha.resize( _numOfArms );
+        _beta.resize( _numOfArms );
         // //copy the initial values to X
         // copy( vals.begin(), vals.end(), _X.begin() );
 
