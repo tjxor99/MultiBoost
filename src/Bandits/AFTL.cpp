@@ -31,8 +31,6 @@
  */
 
 
-// TODO: Verify for correctness!
-
 #include "AFTL.h"
 #include <limits>
 #include <set>
@@ -53,12 +51,24 @@ namespace MultiBoost {
     }
 
 
+    void AFTL::initLearningOptions(const nor_utils::Args& args) 
+    {
+        if ( args.hasArgument( "c" ) ){
+            _Cparam = args.getValue<AlphaReal>("c", 0 );
+        } 
+        if ( args.hasArgument( "alpha" ) ){
+            _alpha = args.getValue<AlphaReal>("alpha", 0 );
+        } 
+    }
+
 
 //----------------------------------------------------------------
 //----------------------------------------------------------------
 
     void AFTL::initialize( vector< AlphaReal >& vals )
     {
+        _T.resize( _numOfArms );
+        fill( _T.begin(), _T.end(), 0 );
         // _p.resize( _numOfArms );
         // _w.resize( _numOfArms );
         // _tmpW.resize( _numOfArms );
@@ -82,7 +92,6 @@ namespace MultiBoost {
         // copy( vals.begin(), vals.end(), _X.begin() );
         
         //one pull for all arm
-        fill( _T.begin(), _T.end(), 0 );
         
         setInitializedFlagToTrue();
     }
@@ -99,7 +108,6 @@ namespace MultiBoost {
 
         // Exploit
         else {                
-
             double max_val = *std::max_element(_r_av.begin(), _r_av.end());
             double eps = std::numeric_limits<double>::epsilon();
 
@@ -123,20 +131,8 @@ namespace MultiBoost {
                 lb += interval;
                 ub += interval;
             }
-
-            std::cout << "Rewards: \n";
-            for (int i = 0; i < _numOfArms; i++) {
-                std::cout << "Reward for arm " << i << " " << _r_av[i] << "\n";
-            }
-
-
-            std::cout << "argmaxes: \n";
-            for (int i = 0; i < len; i++) {
-                std::cout << argmaxes[i] << "\n";
-            }
         }
 
-        std::cout << "Next arm: " << _next_arm << "\n";
         return _next_arm;
     }
 
@@ -145,11 +141,6 @@ namespace MultiBoost {
     {
         _T[ armNum ]++;
         // calculate the feedback value
-
-        // int flag;
-        std::cout << "Outer Time: " << _out_time << "\n";
-        std::cout << "Inner Time: " << _inner_time << "\n";
-
 
         incIter();
         _time++;

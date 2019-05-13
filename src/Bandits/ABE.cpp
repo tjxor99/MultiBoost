@@ -53,6 +53,17 @@ namespace MultiBoost {
         _alpha = 0.7; // The exponent of outer time for which exploration occurs (i^\alpha)
     }
 
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+    void ABE::initLearningOptions(const nor_utils::Args& args) 
+    {
+        if ( args.hasArgument( "c" ) ){
+            _Cparam = args.getValue<AlphaReal>("c", 0 );
+        } 
+        if ( args.hasArgument( "alpha" ) ){
+            _alpha = args.getValue<AlphaReal>("alpha", 0 );
+        } 
+    }
 
 
 //----------------------------------------------------------------
@@ -63,115 +74,32 @@ namespace MultiBoost {
         _p.resize( _numOfArms );
         _w.resize( _numOfArms );
         _tmpW.resize( _numOfArms );
-        _time = 0; //time in WISH
-        _out_time = 1; // outer counter.
-        _inner_time = 0; // inner counter.
+        _T.resize( _numOfArms );
         _r_av.resize( _numOfArms ); //average reward vector in WISH
 
+        _time = 1; //time in WISH
+        _out_time = 1; // outer counter.
+        _inner_time = 0; // inner counter.
+        _next_arm = -1;
 
-        fill( _p.begin(), _p.end(), 0.0 );
+
+        fill( _p.begin(), _p.end(), 1.0 / _numOfArms );
         fill( _w.begin(), _w.end(), 0.0 );
-        // _p[0] = 1.0; // Initially start with first arm being picked for exploration in ABE.
-        // _w[0] = 1.0;
-        if ( _inner_time < (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
-            int next_arm = 0;
-
-            fill( _w.begin(), _w.end(), -10.0 );
-            _w[ next_arm ] = 1;
-            _p[ next_arm ] = 1;
-        }
-
-        else {
-            if (_inner_time >= (int)(_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) + _numOfArms * pow((double)2.0, _out_time)))
-            {
-                // Determine whether the next is pure exploration phase or BE phase
-                if ( _inner_time < (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
-                    fill( _w.begin(), _w.end(), -10.0 );
-                    _w[0] = 1;
-                    _p[0] = 1;
-                }
-                else { // BE
-                    for (int i = 0; i <_numOfArms; i++) {
-                        _w[i] = _eta * sqrt(_time - 1) * _r_av[i];
-                    }                
-
-                    // updateithValue
-                        AlphaReal max = -numeric_limits<AlphaReal>::max();
-                        for( int i=0; i<_numOfArms; i++ ) 
-                        {
-                            //sum += _w[i];
-                            if ( max < _w[i] ) max = _w[i];
-                        }
-                        //double mean = sum / ( double ) _numOfArms;
-                        AlphaReal expSum = 0.0;
-                        
-                        for( int i=0; i<_numOfArms; i++ ) 
-                        {
-                            _tmpW[i] = _w[i] - max;
-                            expSum += exp( _tmpW[i] );
-                        }
-
-
-                        for( int i=0; i<_numOfArms; i++ ) 
-                        {
-                            _p[i] = exp( _tmpW[i] ) / expSum ;
-                        }
-
-                }
-            }
-
-            else {
-                // Exploit in next turn without resetting time.
-                for (int i = 0; i <_numOfArms; i++) {
-                    _w[i] = _eta * sqrt(_time - 1) * _r_av[i];
-
-                        // updateithValue
-                        AlphaReal max = -numeric_limits<AlphaReal>::max();
-                        for( int i=0; i<_numOfArms; i++ ) 
-                        {
-                            if ( max < _w[i] ) max = _w[i];
-                        }
-                        AlphaReal expSum = 0.0;
-                        
-                        for( int i=0; i<_numOfArms; i++ ) 
-                        {
-                            _tmpW[i] = _w[i] - max;
-                            expSum += exp( _tmpW[i] );
-                        }
-
-
-                        for( int i=0; i<_numOfArms; i++ ) 
-                        {
-                            _p[i] = exp( _tmpW[i] ) / expSum ;
-                        }
-                }                
-            }
-        }
-
-
-        // fill( _p.begin(), _p.end(), 1.0 / _numOfArms );
-        // fill( _w.begin(), _w.end(), 1.0 );
         fill( _r_av.begin(), _r_av.end(), 0.0 );
-
-        copy( vals.begin(), vals.end(), _X.begin() );
-        
-        //one pull for all arm
         fill( _T.begin(), _T.end(), 0 );
         
         setInitializedFlagToTrue();
     }
 //----------------------------------------------------------------
 //----------------------------------------------------------------
-    void ABE::updateithValue( int arm )
+    void ABE::updateithValue()
     {
-        //double sum = 0.0;
         AlphaReal max = -numeric_limits<AlphaReal>::max();
         for( int i=0; i<_numOfArms; i++ ) 
         {
-            //sum += _w[i];
+            _w[i] = _eta * sqrt(_time - 1) * _r_av[i];
             if ( max < _w[i] ) max = _w[i];
         }
-        //double mean = sum / ( double ) _numOfArms;
         AlphaReal expSum = 0.0;
         
         for( int i=0; i<_numOfArms; i++ ) 
@@ -183,11 +111,59 @@ namespace MultiBoost {
 
         for( int i=0; i<_numOfArms; i++ ) 
         {
-            //_p[i] = ( 1 - _gamma ) * exp( _w[i] / sum ) + ( _gamma / (double)getIterNum() );
             _p[i] = exp( _tmpW[i] ) / expSum ;
         }
     }
 
+
+    int ABE::getNextAction()
+    {
+        if ( _inner_time < (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
+            _next_arm += 1;
+            _next_arm = _next_arm % _numOfArms;
+        }
+
+        else {
+            updateithValue();
+
+            vector< AlphaReal > cumsum( getArmNumber()+1 );
+            int i;
+
+            cumsum[0] = 0.0;
+            for( int i=0; i < getArmNumber(); i++ )
+            {
+                cumsum[i+1] = cumsum[i] + _p[i];
+            }
+
+            for( i=0; i < getArmNumber(); i++ )
+            {
+                cumsum[i+1] /= cumsum[  getArmNumber() ];
+            }
+
+            AlphaReal r = rand() / (AlphaReal) RAND_MAX;
+
+            for( i=0; i < getArmNumber(); i++ )
+            {
+                if ( (cumsum[i] <= r) && ( r<=cumsum[i+1] )  ) {
+                    _next_arm = i;
+                    break;
+                }
+            }
+
+        }
+
+        // std::cout << "Flag: " << flag << std::endl;
+        // std::cout << "Avg Reward:\ns";
+        // for(int i = 0; i < _numOfArms; i++) {
+        //     std::cout << _r_av[i] << std::endl;
+        // }
+        // std::cout << "Probabilities:\n";
+        // for(int i = 0; i < _numOfArms; i++) {
+        //     std::cout << _p[i] << std::endl;
+        // }
+
+        return _next_arm;
+    }
 
     void ABE::receiveReward( int armNum, AlphaReal reward )
     {
@@ -201,56 +177,12 @@ namespace MultiBoost {
         // Update average reward of arm pulled.
         _r_av[ armNum ] = ((_T[ armNum ] - 1)*_r_av[ armNum ] + reward) / _T[ armNum ]; // Simplified version of above.
 
-        // Explore
-        if ( _inner_time < (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
-            int next_arm;
-
-            if (armNum == (_numOfArms - 1)) { 
-                // Inner loop iterated over K arms. Go back to arm 0.
-                next_arm = 0;
-            }
-            else { 
-                // Explore next arm.
-                next_arm = armNum + 1;
-            }
-
-            fill( _w.begin(), _w.end(), -10.0 );
-            _w[ next_arm ] = 1;
+        if (_inner_time >= (int)(_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) + _numOfArms * pow((double)2.0, _out_time)))
+        {
+            _inner_time = 0;
+            _out_time++;
         }
 
-        else {
-            if (_inner_time >= (int)(_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) + _numOfArms * pow((double)2.0, _out_time)))
-            {
-                _inner_time = 0;
-                _out_time++;
-
-                // Determine whether the next is pure exploration phase or BE phase
-                if ( _inner_time < (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
-                    fill( _w.begin(), _w.end(), -10.0 );
-                    _w[0] = 1;
-                }
-                else { // BE
-                    for (int i = 0; i <_numOfArms; i++) {
-                        _w[i] = _eta * sqrt(_time - 1) * _r_av[i];
-                    }                
-                }
-            }
-
-            else {
-                // Exploit in next turn without resetting time.
-                for (int i = 0; i <_numOfArms; i++) {
-                    _w[i] = _eta * sqrt(_time - 1) * _r_av[i];
-                }                
-            }
-        }
-
-
-        updateithValue( armNum ); // Verified that updateithValue just has to be called once!
-
-        // std::cout << "Reward Vector \n";
-        // for (int i = 0; i < _numOfArms; i++) {
-        //     std::cout << _r_av[i] << '\n';
-        // }
 
     }
 

@@ -234,6 +234,16 @@ namespace MultiBoost {
             args.declareArgument("eta", 
                                  "Second parameter for EXP3G, EXP3.P, Wish", 
                                  1, "<eta>");
+
+            args.declareArgument("c", 
+                                "c for Almost-algs, EXP3pp",
+                                 1, "<c>");
+            args.declareArgument("alpha", 
+                                "alpha for Almost-algs",
+                                 1, "<alpha>");
+            args.declareArgument("C", 
+                                "C for BGE",
+                                 1, "<alpha>");
         }
                 
                 

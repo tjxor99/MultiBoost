@@ -67,6 +67,7 @@ namespace MultiBoost {
         virtual void receiveReward( int armNum, AlphaReal reward );
         virtual void initialize( vector< AlphaReal >& vals );
         virtual int getNextAction();
+        virtual void initLearningOptions(const nor_utils::Args& args );
     // protected:
     //     virtual void updateithValue( int arm ); 
     };

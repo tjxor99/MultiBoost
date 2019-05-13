@@ -48,6 +48,13 @@ namespace MultiBoost {
     }
 
 
+//----------------------------------------------------------------
+    void Gumbel::initLearningOptions(const nor_utils::Args& args) 
+    {
+        if ( args.hasArgument( "C" ) ){
+            _Cparam = args.getValue<AlphaReal>("C", 0 );
+        } 
+    }
 
 //----------------------------------------------------------------
 //----------------------------------------------------------------
@@ -58,9 +65,6 @@ namespace MultiBoost {
         _w.resize( _numOfArms );
         _tmpW.resize( _numOfArms );
         _r_av.resize( _numOfArms ); //average reward vector in WISH
-
-        _Cparam = 0.25;
-
 
 
         fill( _p.begin(), _p.end(), 0.0 );
