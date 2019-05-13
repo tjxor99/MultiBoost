@@ -83,28 +83,21 @@ namespace MultiBoost {
         vector <AlphaReal> theta(_numOfArms, 0.0);
         // theta.resize( _numOfArms );
 
+        AlphaReal max_theta;
+        int argmax = 0;
         for (int i = 0; i < _numOfArms; i++) {
             theta[i] = betaRV(_alpha[i], _beta[i]);
-            // theta[i] = bandit::beta_distribution<double>(_alpha[i], _beta[i])(rng);
+
+            if (i == 0) {
+                max_theta = theta[i];
+            }
+            else if (max_theta < theta[i]) {
+                max_theta = theta[i];
+                argmax = i;
+            }
         }
 
-        // Next action is argmax theta
-        int next_arm = *std::max_element(theta.begin(), theta.end());
-        std::cout << "Next Arm: " << next_arm << std::endl;
-
-
-        // double max_val = *std::max_element(theta.begin(), theta.end());
-        // double eps = std::numeric_limits<double>::epsilon();
-        // int next_arm;
-
-        // for (int i = 0; i < _numOfArms; i++) {
-        //     if (std::abs(max_val - theta[i]) <= eps) {
-        //         next_arm = i;
-        //         break;
-        //     }
-        // }
-
-        return next_arm;
+        return argmax;
     }
 
 //----------------------------------------------------------------
@@ -124,31 +117,6 @@ namespace MultiBoost {
         setInitializedFlagToTrue();
     }
 
-    // void Exp3G::updateithValue( int arm )
-    // {
-    //     //double sum = 0.0;
-    //     AlphaReal max = -numeric_limits<AlphaReal>::max();
-    //     for( int i=0; i<_numOfArms; i++ ) 
-    //     {
-    //         //sum += _w[i];
-    //         if ( max < _w[i] ) max = _w[i];
-    //     }
-    //     //double mean = sum / ( double ) _numOfArms;
-    //     AlphaReal expSum = 0.0;
-        
-    //     for( int i=0; i<_numOfArms; i++ ) 
-    //     {
-    //         _tmpW[i] = _w[i] - max;
-    //         expSum += exp( _tmpW[i] );
-    //     }
-
-
-    //     for( int i=0; i<_numOfArms; i++ ) 
-    //     {
-    //         //_p[i] = ( 1 - _gamma ) * exp( _w[i] / sum ) + ( _gamma / (double)getIterNum() );
-    //         _p[i] = ( 1 - _gamma ) * ( exp( _tmpW[i] ) / expSum ) + ( _gamma / (AlphaReal)getIterNum() );
-    //     }
-    // }
 
 //----------------------------------------------------------------
 //----------------------------------------------------------------
@@ -165,17 +133,6 @@ namespace MultiBoost {
             _beta[ armNum ] += 1;
         }
         incIter();
-
-        // std::bernoulli_distribution d(reward);
-        // bool success = d(rng);
-
-        // if (success) {
-        //     _alpha[ armNum ] += 1;
-        // }
-
-        // else {
-        //     _beta[ armNum ] += 1;
-        // }
 
     }
 
