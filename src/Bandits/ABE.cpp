@@ -70,9 +70,86 @@ namespace MultiBoost {
 
 
         fill( _p.begin(), _p.end(), 0.0 );
-        fill( _w.begin(), _w.end(), -10.0 );
-        _p[0] = 1.0; // Initially start with first arm being picked for exploration in ABE.
-        _w[0] = 1.0;
+        fill( _w.begin(), _w.end(), 0.0 );
+        // _p[0] = 1.0; // Initially start with first arm being picked for exploration in ABE.
+        // _w[0] = 1.0;
+        if ( _inner_time < (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
+            int next_arm = 0;
+
+            fill( _w.begin(), _w.end(), -10.0 );
+            _w[ next_arm ] = 1;
+            _p[ next_arm ] = 1;
+        }
+
+        else {
+            if (_inner_time >= (int)(_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) + _numOfArms * pow((double)2.0, _out_time)))
+            {
+                // Determine whether the next is pure exploration phase or BE phase
+                if ( _inner_time < (int)_numOfArms * floor(_Cparam * pow(_out_time, _alpha)) ) { // Using Cparam
+                    fill( _w.begin(), _w.end(), -10.0 );
+                    _w[0] = 1;
+                    _p[0] = 1;
+                }
+                else { // BE
+                    for (int i = 0; i <_numOfArms; i++) {
+                        _w[i] = _eta * sqrt(_time - 1) * _r_av[i];
+                    }                
+
+                    // updateithValue
+                        AlphaReal max = -numeric_limits<AlphaReal>::max();
+                        for( int i=0; i<_numOfArms; i++ ) 
+                        {
+                            //sum += _w[i];
+                            if ( max < _w[i] ) max = _w[i];
+                        }
+                        //double mean = sum / ( double ) _numOfArms;
+                        AlphaReal expSum = 0.0;
+                        
+                        for( int i=0; i<_numOfArms; i++ ) 
+                        {
+                            _tmpW[i] = _w[i] - max;
+                            expSum += exp( _tmpW[i] );
+                        }
+
+
+                        for( int i=0; i<_numOfArms; i++ ) 
+                        {
+                            _p[i] = exp( _tmpW[i] ) / expSum ;
+                        }
+
+                }
+            }
+
+            else {
+                // Exploit in next turn without resetting time.
+                for (int i = 0; i <_numOfArms; i++) {
+                    _w[i] = _eta * sqrt(_time - 1) * _r_av[i];
+
+                        // updateithValue
+                        AlphaReal max = -numeric_limits<AlphaReal>::max();
+                        for( int i=0; i<_numOfArms; i++ ) 
+                        {
+                            //sum += _w[i];
+                            if ( max < _w[i] ) max = _w[i];
+                        }
+                        //double mean = sum / ( double ) _numOfArms;
+                        AlphaReal expSum = 0.0;
+                        
+                        for( int i=0; i<_numOfArms; i++ ) 
+                        {
+                            _tmpW[i] = _w[i] - max;
+                            expSum += exp( _tmpW[i] );
+                        }
+
+
+                        for( int i=0; i<_numOfArms; i++ ) 
+                        {
+                            //_p[i] = ( 1 - _gamma ) * exp( _w[i] / sum ) + ( _gamma / (double)getIterNum() );
+                            _p[i] = exp( _tmpW[i] ) / expSum ;
+                        }
+                }                
+            }
+        }
 
 
         // fill( _p.begin(), _p.end(), 1.0 / _numOfArms );
