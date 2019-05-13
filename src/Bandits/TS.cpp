@@ -53,8 +53,29 @@ namespace MultiBoost {
     }
 
 
+
 //----------------------------------------------------------------
 //----------------------------------------------------------------
+
+    double betaRV(int alpha, int beta) {
+        // Generating beta RV with Uniform RVs
+        AlphaReal X, Y;
+
+        AlphaReal U;
+
+        X = 0; // ~ Gamma(alpha, 1)
+        for (int i = 0; i < alpha; i++) {
+            U = rand() / (AlphaReal) RAND_MAX;
+            X = X - log(U);
+        }
+
+        for (int i = 0; i < beta; i++) {
+            U = rand() / (AlphaReal) RAND_MAX;
+            Y = Y - log(U);
+        }
+
+        return X / (X + Y);
+    }
 
 
     int TS::getNextAction()
@@ -63,6 +84,7 @@ namespace MultiBoost {
         // theta.resize( _numOfArms );
 
         for (int i = 0; i < _numOfArms; i++) {
+            theta[i] = betaRV(_alpha[i], _beta[i]);
             // theta[i] = bandit::beta_distribution<double>(_alpha[i], _beta[i])(rng);
         }
 
@@ -135,10 +157,17 @@ namespace MultiBoost {
         _T[ armNum ]++;
         // calculate the feedback value
 
+        AlphaReal rand_val = rand() / (AlphaReal) RAND_MAX;
+        if (rand_val >= reward) {
+            _alpha[ armNum ] += 1;
+        }
+        else {
+            _beta[ armNum ] += 1;
+        }
+        incIter();
 
         // std::bernoulli_distribution d(reward);
         // bool success = d(rng);
-        incIter();
 
         // if (success) {
         //     _alpha[ armNum ] += 1;

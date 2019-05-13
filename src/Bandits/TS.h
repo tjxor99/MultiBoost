@@ -60,8 +60,8 @@ namespace MultiBoost {
     {
     protected:
         double _horizon; //horizon
-        vector <AlphaReal> _alpha;
-        vector <AlphaReal> _beta;
+        vector <int> _alpha;
+        vector <int> _beta;
 
 
     public:

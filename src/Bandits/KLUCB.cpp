@@ -44,7 +44,7 @@ namespace MultiBoost {
     KLUCB::KLUCB( void ) : Exp3G()
     {
       c = 0;
-      delta = 1e-8; // tolerance for finding q
+      delta = 1e-2; // tolerance for finding q
     }
 
 
@@ -58,7 +58,7 @@ namespace MultiBoost {
 
     double findq(double S, double T, double UB) {
       double q, LHS;
-      double delta = 1e-3;
+      double delta = 1e-2;
 
       q = 1;
       LHS = T * KLdiv(S / T, q);
