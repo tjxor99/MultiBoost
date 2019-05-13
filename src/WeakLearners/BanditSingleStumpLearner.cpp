@@ -63,6 +63,7 @@
 #include "Bandits/FPL.h"
 #include "Bandits/TS.h"
 #include "Bandits/KLUCB.h"
+#include "Bandits/EXP3pp.h"
 
 namespace MultiBoost {
 
@@ -90,7 +91,7 @@ namespace MultiBoost {
                              1, "<K>");
 
         args.declareArgument("banditalgo", 
-                             "The bandit algorithm (UCBK, UCBKRandomized, EXP3, ABE, BE, Gumbel, AFTL, FTL, FPL, TS, KLUCB)\n"
+                             "The bandit algorithm (UCBK, UCBKRandomized, EXP3, ABE, BE, Gumbel, AFTL, FTL, FPL, TS, KLUCB, EXP3pp)\n"
                              "Default is UCBK\n",
                              1, "<algoname>");
 
@@ -177,6 +178,8 @@ namespace MultiBoost {
             _banditAlgoName = BA_TS;
         else if ( banditAlgoName.compare( "KLUCB") == 0 )
             _banditAlgoName = BA_KLUCB;
+        else if ( banditAlgoName.compare( "EXP3pp") == 0 )
+            _banditAlgoName = BA_EXP3pp;
 
 // 
 // 
@@ -240,6 +243,9 @@ namespace MultiBoost {
                 break;
             case BA_KLUCB:
                 _banditAlgo = new KLUCB();
+                break;
+            case BA_EXP3pp:
+                _banditAlgo = new EXP3pp();
                 break;
 // 
             default:

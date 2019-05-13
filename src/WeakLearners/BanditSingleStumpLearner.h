@@ -74,7 +74,8 @@ namespace MultiBoost {
         BA_FTL, // FTL
         BA_FPL, // FPL
         BA_TS,
-        BA_KLUCB
+        BA_KLUCB,
+        BA_EXP3pp
     };
         
         
