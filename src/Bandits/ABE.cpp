@@ -49,8 +49,8 @@ namespace MultiBoost {
         _eta = 0.4;
         _horizon = 100.0;
 
-        _Cparam = 0.;
-        _alpha = 0.5; // The exponent of outer time for which exploration occurs (i^\alpha)
+        _Cparam = 0.2;
+        _alpha = 0.7; // The exponent of outer time for which exploration occurs (i^\alpha)
     }
 
 
@@ -129,10 +129,8 @@ namespace MultiBoost {
                         AlphaReal max = -numeric_limits<AlphaReal>::max();
                         for( int i=0; i<_numOfArms; i++ ) 
                         {
-                            //sum += _w[i];
                             if ( max < _w[i] ) max = _w[i];
                         }
-                        //double mean = sum / ( double ) _numOfArms;
                         AlphaReal expSum = 0.0;
                         
                         for( int i=0; i<_numOfArms; i++ ) 
@@ -144,7 +142,6 @@ namespace MultiBoost {
 
                         for( int i=0; i<_numOfArms; i++ ) 
                         {
-                            //_p[i] = ( 1 - _gamma ) * exp( _w[i] / sum ) + ( _gamma / (double)getIterNum() );
                             _p[i] = exp( _tmpW[i] ) / expSum ;
                         }
                 }                
