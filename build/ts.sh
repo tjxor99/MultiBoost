@@ -5,12 +5,8 @@
 # 
 # 
 dataset=$1
-# 
-train_epochs=10000
-if [ "$dataset" == "mnist" ]; then
-	train_epochs=30000
-fi
-# 
+train_epochs=$2
+
 DIRECTORY="newest_$dataset"
 if [ ! -d "$DIRECTORY" ]; then
 	# echo "Making Directory $DIRECTORY ..."

@@ -7,12 +7,8 @@
 dataset=$1
 c=$2
 alpha=$3
-# 
-train_epochs=10000
-if [ "$dataset" == "mnist" ]; then
-	train_epochs=30000
-fi
-# 
+train_epochs=$4
+
 DIRECTORY="newest_$dataset"
 if [ ! -d "$DIRECTORY" ]; then
 	mkdir $DIRECTORY
