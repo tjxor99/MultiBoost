@@ -87,7 +87,8 @@ namespace MultiBoost {
         // _w[0] = 1.0;
 
 
-        fill( _r_av.begin(), _r_av.end(), 0.0 );
+        // fill( _r_av.begin(), _r_av.end(), 0.0 );
+        fill( _r_av.begin(), _r_av.end(), 1.0 );
 
         // copy( vals.begin(), vals.end(), _X.begin() );
         
