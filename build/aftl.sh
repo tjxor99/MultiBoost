@@ -27,6 +27,7 @@ target_file="AFTL_c"
 target_file+=$c
 target_file+="_alpha"
 target_file+=$alpha
+target_file+=init1
 target_file+=".dta"
 
 
