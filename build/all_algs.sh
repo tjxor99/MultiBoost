@@ -36,11 +36,11 @@ bash ./exp3p.sh $dataset $train_epochs
 
 # AFTL
 # Hyperparameters in order of c, alpha
-bash ./aftl.sh $dataset 0.2 0.7 $train_epochs
+# bash ./aftl.sh $dataset 0.2 0.7 $train_epochs
 # bash ./aftl.sh $dataset 0.3 0.5 $train_epochs
 # bash ./aftl.sh $dataset 1 0.5 $train_epochs
 # bash ./aftl.sh $dataset 2 0.4 $train_epochs
-# bash ./aftl.sh $dataset 3 0.3 $train_epochs
+bash ./aftl.sh $dataset 3 0.3 $train_epochs
 
 # ABE
 # Hyperparameters in order of c, alpha
