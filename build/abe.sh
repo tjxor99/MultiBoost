@@ -24,7 +24,7 @@ target_file="ABE_c"
 target_file+=$c
 target_file+="_alpha"
 target_file+=$alpha
-target_file+=".dta"
+target_file+="_init0.dta"
 
 echo "Running ABE for dataset $dataset with params c = $c, alpha = $alpha"
 ./multiboost --fileformat arff --traintest "../data/$train_file" "../data/$test_file" $train_epochs --verbose 1 --learnertype BanditSingleStumpLearner --outputinfo "./$DIRECTORY/$target_file" --banditalgo ABE --updaterule logedge --c $c --alpha $alpha

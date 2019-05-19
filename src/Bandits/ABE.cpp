@@ -85,9 +85,9 @@ namespace MultiBoost {
 
         fill( _p.begin(), _p.end(), 1.0 / _numOfArms );
         fill( _w.begin(), _w.end(), 0.0 );
-        // fill( _r_av.begin(), _r_av.end(), 0.0 );
+        fill( _r_av.begin(), _r_av.end(), 0.0 );
         fill( _T.begin(), _T.end(), 0 );
-        fill( _r_av.begin(), _r_av.end(), 1.0 );
+        // fill( _r_av.begin(), _r_av.end(), 1.0 );
         
         setInitializedFlagToTrue();
     }
