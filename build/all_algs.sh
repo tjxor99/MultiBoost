@@ -5,7 +5,7 @@ make all
 
 dataset=$1
 # 
-train_epochs=10000
+train_epochs=50000
 if [ "$dataset" == "mnist" ]; then
 	train_epochs=30000
 fi
@@ -44,8 +44,11 @@ fi
 
 # ABE
 # Hyperparameters in order of c, alpha
-bash ./abe.sh $dataset 0.2 0.7 $train_epochs
-bash ./abe.sh $dataset 0.3 0.5 $train_epochs
-bash ./abe.sh $dataset 1 0.5 $train_epochs
-bash ./abe.sh $dataset 2 0.4 $train_epochs
-bash ./abe.sh $dataset 3 0.3 $train_epochs
+bash ./abe.sh $dataset 0.1 0.7 $train_epochs
+bash ./abe.sh $dataset 0.2 0.5 $train_epochs
+
+# bash ./abe.sh $dataset 0.2 0.7 $train_epochs
+# bash ./abe.sh $dataset 0.3 0.5 $train_epochs
+# bash ./abe.sh $dataset 1 0.5 $train_epochs
+# bash ./abe.sh $dataset 2 0.4 $train_epochs
+# bash ./abe.sh $dataset 3 0.3 $train_epochs
