@@ -68,7 +68,7 @@ namespace MultiBoost {
     void AFTL::initialize( vector< AlphaReal >& vals )
     {
         _T.resize( _numOfArms );
-        fill( _T.begin(), _T.end(), 0 );
+        fill( _T.begin(), _T.end(), 1 );
         // _p.resize( _numOfArms );
         // _w.resize( _numOfArms );
         // _tmpW.resize( _numOfArms );
