@@ -128,8 +128,6 @@ namespace MultiBoost {
         }
 
         else {
-            updateithValue();
-
             vector< AlphaReal > cumsum( getArmNumber()+1 );
             int i;
 
@@ -187,7 +185,7 @@ namespace MultiBoost {
             _out_time++;
         }
 
-
+        updateithValue();
     }
 
 
