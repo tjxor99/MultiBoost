@@ -44,8 +44,16 @@ fi
 
 # ABE
 # Hyperparameters in order of c, alpha
-bash ./abe.sh $dataset 0.1 0.7 $train_epochs
-bash ./abe.sh $dataset 0.2 0.5 $train_epochs
+bash ./abe.sh $dataset 0.1 0.7 0.01 $train_epochs
+bash ./abe.sh $dataset 0.1 0.7 0.05 $train_epochs
+bash ./abe.sh $dataset 0.1 0.7 0.1 $train_epochs
+bash ./abe.sh $dataset 0.1 0.7 0.2 $train_epochs
+bash ./abe.sh $dataset 0.1 0.7 0.4 $train_epochs
+# bash ./abe.sh $dataset 0.1 0.7 0.6 $train_epochs
+# bash ./abe.sh $dataset 0.1 0.7 0.7 $train_epochs
+# bash ./abe.sh $dataset 0.1 0.7 0.8 $train_epochs
+# bash ./abe.sh $dataset 0.1 0.7 0.9 $train_epochs
+# bash ./abe.sh $dataset 0.2 0.5 $train_epochs
 
 # bash ./abe.sh $dataset 0.2 0.7 $train_epochs
 # bash ./abe.sh $dataset 0.3 0.5 $train_epochs

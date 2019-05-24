@@ -232,7 +232,7 @@ namespace MultiBoost {
                                  "Exploration parameter.", 
                                  1, "<gamma>");   
             args.declareArgument("eta", 
-                                 "Second parameter for EXP3G, EXP3.P, Wish", 
+                                 "Second parameter for EXP3G, EXP3.P, ABE", 
                                  1, "<eta>");
 
             args.declareArgument("c", 

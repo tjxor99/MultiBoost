@@ -63,6 +63,9 @@ namespace MultiBoost {
         if ( args.hasArgument( "alpha" ) ){
             _alpha = args.getValue<AlphaReal>("alpha", 0 );
         } 
+        if ( args.hasArgument( "eta" ) ){
+            _eta = args.getValue<AlphaReal>("eta", 0 );
+        } 
     }
 
 

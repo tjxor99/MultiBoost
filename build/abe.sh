@@ -7,7 +7,8 @@
 dataset=$1
 c=$2
 alpha=$3
-train_epochs=$4
+eta=$4
+train_epochs=$5
 
 
 DIRECTORY="newest_$dataset"
@@ -24,7 +25,9 @@ target_file="ABE_c"
 target_file+=$c
 target_file+="_alpha"
 target_file+=$alpha
+target_file+="_eta"
+target_file+=$eta
 target_file+="_init0.dta"
 
 echo "Running ABE for dataset $dataset with params c = $c, alpha = $alpha"
-./multiboost --fileformat arff --traintest "../data/$train_file" "../data/$test_file" $train_epochs --verbose 1 --learnertype BanditSingleStumpLearner --outputinfo "./$DIRECTORY/$target_file" --banditalgo ABE --updaterule logedge --c $c --alpha $alpha
+./multiboost --fileformat arff --traintest "../data/$train_file" "../data/$test_file" $train_epochs --verbose 1 --learnertype BanditSingleStumpLearner --outputinfo "./$DIRECTORY/$target_file" --banditalgo ABE --updaterule logedge --c $c --alpha $alpha --eta $eta
